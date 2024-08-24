@@ -4,7 +4,7 @@
 FinanceGuard is a robust and intuitive personal finance tracker designed to help users manage their financial health effortlessly. Built using Python, this project showcases advanced backend development skills and demonstrates proficiency in data management, API integration, and security practices.
 
 ## Key Features [More details to be added soon :-)]
-![Personal Finance Tracker features - plan](https://github.com/user-attachments/assets/f51d4435-f1dc-4a81-b57d-1ac9a186c45c)
+![Personal Finance Tracker features - plan (1)](https://github.com/user-attachments/assets/ab218078-7ed2-440f-a4fb-e5f15207b959)
 <!---
 - **User Authentication and Authorization**: Secure login and account management using JWT (JSON Web Tokens) and bcrypt for password hashing.
 - **Expense and Income Tracking**: Users can categorize, track, and visualize their income and expenses with ease.
