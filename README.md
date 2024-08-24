@@ -5,7 +5,8 @@ FinanceGuard is a robust and intuitive personal finance tracker designed to help
 
 ## Key Features [More details to be added soon :-)]
 ![Personal Finance Tracker features - plan (1)](https://github.com/user-attachments/assets/ab218078-7ed2-440f-a4fb-e5f15207b959)
-![Personal Finance Tracker Database structure (1)](https://github.com/user-attachments/assets/491f1f82-f272-4495-bb87-e5dcffad951c)
+![Personal Finance Tracker Database structure (2)](https://github.com/user-attachments/assets/ee8caf2d-fdf2-4148-8deb-0f04cae24393)
+
 <!---
 - **User Authentication and Authorization**: Secure login and account management using JWT (JSON Web Tokens) and bcrypt for password hashing.
 - **Expense and Income Tracking**: Users can categorize, track, and visualize their income and expenses with ease.
