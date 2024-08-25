@@ -2,9 +2,10 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap4
 from forms import ContactForm
 from datetime import date
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '495bd4f2b03184706c74ad11eb8a2a0a'
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
 Bootstrap4(app)
 
 current_year = date.today().year
