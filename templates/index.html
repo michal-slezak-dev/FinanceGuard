@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block styling %}
+      {{ super() }}
+      .px-3 h1 {
+        text-shadow: 1px 1px #000;
+      }
+{% endblock %}
+
+{% block nav %}
+<a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('features') }}">Features</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('contact') }}">Contact</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('register') }}">Register</a>
+{% endblock %}
+
+{% block content %}
+    <h1>Take Control of Your Financial Future</h1>
+    <p class="lead">Managing your personal finances doesn’t have to be complicated. With FinanceGuard, you can track your spending, set budgets, and gain insights into your financial habits—all in one place. Our easy-to-use platform empowers you to make informed decisions, save more, and achieve your financial goals.</p>
+    <p class="lead">
+      <a href="{{ url_for('features') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
+    </p>
+{% endblock %}
