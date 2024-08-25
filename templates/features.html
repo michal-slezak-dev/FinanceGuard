@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block styling %}
+      {{ super() }}
+      .card-body {
+        text-align: center;
+      }
+
+{% endblock %}
+
+{% block nav %}
+        <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url_for('home') }}">Home</a>
+        <a class="nav-link fw-bold py-1 px-0 active" href="{{ url_for('features') }}">Features</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('contact') }}">Contact</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('register') }}">Register</a>
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3 text-bg-primary">
+            <h4 class="my-0 fw-normal">Transaction Tracking</h4>
+          </div>
+          <div class="card-body">
+<!--            <h1 class="card-title pricing-card-title">$0<small class="text-body-secondary fw-light">/mo</small></h1>-->
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Easily add, edit, or delete individual transactions.</li>
+              <li>Organize your spending by tagging transactions with categories</li>
+              <li>Set up recurring entries for subscriptions, bills, and more.</li>
+            </ul>
+<!--            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>-->
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3 text-bg-primary">
+            <h4 class="my-0 fw-normal">Budget Management</h4>
+          </div>
+          <div class="card-body">
+<!--            <h1 class="card-title pricing-card-title">$15<small class="text-body-secondary fw-light">/mo</small></h1>-->
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Create and manage budgets for different categories.</li>
+              <li>Track your spending in real-time and ensure you stay within your budget limits with detailed monitoring and alerts.</li>
+            </ul>
+<!--            <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>-->
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3 text-bg-primary">
+            <h4 class="my-0 fw-normal">Income Tracking</h4>
+          </div>
+          <div class="card-body">
+<!--            <h1 class="card-title pricing-card-title">$29<small class="text-body-secondary fw-light">/mo</small></h1>-->
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Track various sources of income and wires effortlessly.</li>
+              <li>Compare your income and expenses over time to get a clear picture of your financial health and make informed decisions.</li>
+            </ul>
+<!--            <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
