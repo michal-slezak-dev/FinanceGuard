@@ -14,8 +14,10 @@
 
 {% block content %}
     <h1>Success!!!</h1>
-    <p class="lead text">We  will get back to you as soon as possible!</p>
-    <p class="lead">
-      <a href="{{ url_for('home') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Go Back To Homepage</a>
-    </p>
+    {% if option == "contact" %}
+        <p class="lead text">We  will get back to you as soon as possible!</p>
+        <p class="lead">
+          <a href="{{ url_for('home') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Go Back To Homepage</a>
+        </p>
+    {% endif %}
 {% endblock %}
