@@ -2,7 +2,10 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap4
 from forms import ContactForm
 from datetime import date
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')

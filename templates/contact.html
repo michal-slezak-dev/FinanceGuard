@@ -2,6 +2,11 @@
 {% from 'bootstrap4/form.html' import render_form %}
 {% block styling %}
     {{ super() }}
+
+    #name, #email, #message {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
 {% endblock %}
 
 {% block nav %}
@@ -13,5 +18,6 @@
 {% endblock %}
 
 {% block content %}
-                {{ render_form(form) }}
+        <h1>Contact Us!</h1>
+        {{ render_form(form) }}
 {% endblock %}
