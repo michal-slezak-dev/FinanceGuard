@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, email
+from wtforms.validators import DataRequired, Email
 
 
 # Contact Form
 class ContactForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired(), email()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     message = TextAreaField("Message", validators=[DataRequired()])
     submit = SubmitField("Submit")
