@@ -8,7 +8,6 @@ import requests
 load_dotenv()
 API_KEY = os.getenv('MAILJET_API_KEY')
 SECRET_API_KEY = os.getenv('MAILJET_SECRET_API_KEY')
-SENDER_URL = "https://api.mailjet.com/v3/REST/sender"
 
 
 def send_mail(username, message, from_email, user_email, to_email):
