@@ -46,8 +46,9 @@ def contact():
         user_email = contact_form.email.data
         message = contact_form.message.data
 
-        my_email, my_pass = os.getenv('EMAIL'), os.getenv('EMAIL_APP_PASS')
-        send_mail(username, message, user_email, my_email, my_email, my_pass)
+        to_email = os.getenv('EMAIL')
+        from_email = os.getenv('EMAIL')  # it's not the best way to do that...
+        send_mail(username, message, from_email, user_email, to_email)
 
     return render_template("contact.html", year=current_year, form=contact_form)
 
