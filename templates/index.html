@@ -5,6 +5,10 @@
       .px-3 h1 {
         text-shadow: 1px 1px #000;
       }
+
+      .text {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
 {% endblock %}
 
 {% block nav %}
@@ -17,7 +21,7 @@
 
 {% block content %}
     <h1>Take Control of Your Financial Future</h1>
-    <p class="lead">Managing your personal finances doesn’t have to be complicated. With FinanceGuard, you can track your spending, set budgets, and gain insights into your financial habits—all in one place. Our easy-to-use platform empowers you to make informed decisions, save more, and achieve your financial goals.</p>
+    <p class="lead text">Managing your personal finances doesn’t have to be complicated. With FinanceGuard, you can track your spending, set budgets, and gain insights into your financial habits—all in one place. Our easy-to-use platform empowers you to make informed decisions, save more, and achieve your financial goals.</p>
     <p class="lead">
       <a href="{{ url_for('features') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
     </p>
