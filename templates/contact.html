@@ -19,5 +19,6 @@
 
 {% block content %}
         <h1>Contact Us!</h1>
+        {{ form.csrf_token }}
         {{ render_form(form) }}
 {% endblock %}
