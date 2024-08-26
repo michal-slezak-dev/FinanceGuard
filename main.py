@@ -48,7 +48,10 @@ def contact():
 
         to_email = os.getenv('EMAIL')
         from_email = os.getenv('EMAIL')  # it's not the best way to do that...
+
+        #  definitely will have to change that
         send_mail(username, message, from_email, user_email, to_email)
+        return render_template("success.html")
 
     return render_template("contact.html", year=current_year, form=contact_form)
 

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block styling %}
+    {{ super() }}
+{% endblock %}
+
+{% block nav %}
+        <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url_for('home') }}">Home</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('features') }}">Features</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('contact') }}">Contact</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('register') }}">Register</a>
+{% endblock %}
+
+{% block content %}
+    <h1>Success!!!</h1>
+    <p class="lead text">We  will get back to you as soon as possible!</p>
+    <p class="lead">
+      <a href="{{ url_for('home') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Go Back To Homepage</a>
+    </p>
+{% endblock %}
