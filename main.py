@@ -52,6 +52,7 @@ def contact():
         #  definitely will have to change that
         send_mail(username, message, from_email, user_email, to_email)
         return render_template("success.html")
+    # TODO: Add failure.html page
 
     return render_template("contact.html", year=current_year, form=contact_form)
 
