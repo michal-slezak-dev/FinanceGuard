@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from 'bootstrap4/form.html' import render_form %}
+
+{% block styling %}
+    {{ super() }}
+
+    #name, #email, #password {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+{% endblock %}
+
+{% block nav %}
+        <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url_for('home') }}">Home</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('features') }}">Features</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('contact') }}">Contact</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link fw-bold py-1 px-0 active" href="{{ url_for('register') }}">Register</a>
+{% endblock %}
+<!-- TODO: Create db Models with SQLAlchemy -->
+{% block content %}
+        <h1>Sign Up</h1>
+        {{ form.csrf_token }}
+        {{ render_form(form) }}
+{% endblock %}

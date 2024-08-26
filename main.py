@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap4
 from flask_wtf import CSRFProtect
-from forms import ContactForm
+from forms import ContactForm, LoginForm, RegisterForm
 from contact import send_mail
 from datetime import date
 from dotenv import load_dotenv
@@ -19,12 +19,16 @@ current_year = date.today().year
 
 @app.route("/login")
 def login():
-    return "hej"
+    login_form = LoginForm()
+
+    return render_template("login.html", form=login_form)
 
 
 @app.route("/register")
 def register():
-    return "hej"
+    register_form = RegisterForm()
+
+    return render_template("register.html", form=register_form)
 
 
 @app.route("/")
@@ -51,7 +55,7 @@ def contact():
 
         #  definitely will have to change that
         send_mail(username, message, from_email, user_email, to_email)
-        return render_template("success.html")
+        return render_template("success.html", option="contact")  # contact/login/register
 
     return render_template("contact.html", year=current_year, form=contact_form)
 
