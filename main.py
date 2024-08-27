@@ -1,11 +1,11 @@
 from flask import render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap4
 from flask_wtf import CSRFProtect
-from flask_login import LoginManager, login_user, current_user, login_required
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
 from models import User
-from forms import ContactForm, LoginForm, RegisterForm
+from forms import ContactForm, LoginForm, RegisterForm, DeleteForm
 from contact import send_mail
 from datetime import date
 from dotenv import load_dotenv
@@ -27,6 +27,13 @@ current_year = date.today().year
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User, user_id)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -77,7 +84,7 @@ def register():
 
         login_user(new_user)
 
-        return redirect(url_for('platform_homepage'))
+        return redirect(url_for('platform_homepage', current_user=current_user))
 
     return render_template("register.html", form=register_form)
 
@@ -86,6 +93,42 @@ def register():
 @login_required
 def platform_homepage():
     return render_template("platform_homepage.html")
+
+
+@app.route("/transactions", methods=["GET", "POST"])
+@login_required
+def show_transactions():
+    return render_template("transactions.html")
+
+
+@app.route("/budgets", methods=["GET", "POST"])
+@login_required
+def show_budgets():
+    return render_template("budgets.html")
+
+
+@app.route("/categories", methods=["GET", "POST"])
+@login_required
+def show_categories():
+    return render_template("categories.html")
+
+
+@app.route("/settings", methods=["GET", "POST"])
+@login_required
+def settings():
+    delete_form = DeleteForm()
+
+    if delete_form.validate_on_submit():
+        user = db.session.execute(db.select(User).where(User.email == current_user.email)).scalar()
+
+        logout_user()
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return redirect(url_for('home'))
+
+    return render_template("settings.html", form=delete_form)
 
 
 @app.route("/")

@@ -1,13 +1,35 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <p>Platform homepage!</p>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block styling %}
+    {{ super() }}
+
+    .container {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    a {
+        display: block;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 1);
+    }
+
+{% endblock %}
+
+{% block nav %}
+        <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url_for('home') }}">Home</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
+
+{% block content %}
+    <h1>Hello, {{ current_user.name }}!</h1>
+    <h3>What do you want to do today?</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col"><a href="{{ url_for('show_transactions') }}">Transactions</a></div>
+            <div class="col"><a href="{{ url_for('show_budgets') }}">Budget Management</a></div>
+            <div class="w-100"></div>
+            <div class="col"><a href="{{ url_for('show_categories') }}">Categories</a></div>
+            <div class="col"><a href="{{ url_for('settings') }}">Account Settings</a></div>
+        </div>
+    </div>
+{% endblock %}

@@ -19,5 +19,10 @@
         <p class="lead">
           <a href="{{ url_for('home') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Go Back To Homepage</a>
         </p>
+    {% elif option == "delete" %}
+        <p class="lead text">Your account has been succesfully deleted! See you later 🤫</p>
+        <p class="lead">
+          <a href="{{ url_for('home') }}" class="btn btn-lg btn-light fw-bold border-white bg-white">Go Back To Homepage</a>
+        </p>
     {% endif %}
 {% endblock %}
