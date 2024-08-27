@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap4
 from flask_wtf import CSRFProtect
-from flask_login import LoginManager, login_user, current_user
-from werkzeug.security import generate_password_hash
+from flask_login import LoginManager, login_user, current_user, login_required
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
 from models import User
 from forms import ContactForm, LoginForm, RegisterForm
@@ -32,6 +32,21 @@ def load_user(user_id):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     login_form = LoginForm()
+
+    if login_form.validate_on_submit():
+        email = login_form.email.data
+        raw_password = login_form.password.data
+
+        user = db.session.execute(db.select(User).where(User.email == email)).scalar()
+        if not user:
+            flash("User doesn't exist! Register first 😊")
+            return redirect(url_for('register'))
+        elif not check_password_hash(user.password_hash, raw_password):
+            flash("Password incorrect, please try again.")
+            return redirect(url_for('login'))
+        else:
+            login_user(user)
+            return redirect(url_for('platform_homepage'))
 
     return render_template("login.html", form=login_form)
 
@@ -68,6 +83,7 @@ def register():
 
 
 @app.route("/dashboard")
+@login_required
 def platform_homepage():
     return render_template("platform_homepage.html")
 

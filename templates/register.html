@@ -19,6 +19,13 @@
 
 {% block content %}
         <h1>Sign Up</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="flash">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         {{ form.csrf_token }}
         {{ render_form(form) }}
 {% endblock %}
