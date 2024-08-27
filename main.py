@@ -1,8 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap4
 from flask_wtf import CSRFProtect
+from flask_login import LoginManager, login_user, current_user
+from werkzeug.security import generate_password_hash
 from app import app, db
-from models import Users
+from models import User
 from forms import ContactForm, LoginForm, RegisterForm
 from contact import send_mail
 from datetime import date
@@ -12,27 +14,62 @@ import os
 load_dotenv()
 
 csrf = CSRFProtect(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 Bootstrap4(app)
 
 # create our database
 # with app.app_context():
 #     db.create_all()
-
 current_year = date.today().year
 
 
-@app.route("/login")
+@login_manager.user_loader
+def load_user(user_id):
+    return db.get_or_404(User, user_id)
+
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     login_form = LoginForm()
 
     return render_template("login.html", form=login_form)
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegisterForm()
 
+    if register_form.validate_on_submit():
+        username = register_form.name.data
+        user_email = register_form.email.data
+        raw_password = register_form.password.data
+
+        user = db.session.execute(db.select(User).where(User.email == user_email)).scalar()
+        if user:
+            flash("You already have an account! Log In 😊")
+            return redirect(url_for('login'))
+
+        hashed_password = generate_password_hash(password=raw_password, method="pbkdf2:sha256", salt_length=8)
+        new_user = User(
+            name=username,
+            email=user_email,
+            password_hash=hashed_password
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        login_user(new_user)
+
+        return redirect(url_for('platform_homepage'))
+
     return render_template("register.html", form=register_form)
+
+
+@app.route("/dashboard")
+def platform_homepage():
+    return render_template("platform_homepage.html")
 
 
 @app.route("/")
