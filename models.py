@@ -12,6 +12,36 @@ class User(UserMixin, db.Model):
     name: Mapped[str] = mapped_column(String(250), nullable=False)
     email: Mapped[str] = mapped_column(String(256), nullable=False)
     password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    budgets = relationship("Budget", back_populates="user")
 
     def __repr__(self):
         return f"User(id={self.id}, name={self.name}, email={self.email}, pass_hash={self.password_hash}"
+
+
+class Category(db.Model):
+    __tablename__ = "categories"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    category_name: Mapped[str] = mapped_column(String(16), nullable=False)
+    budgets = relationship("Budget", back_populates="category")
+
+
+class Type(db.Model):
+    __tablename__ = "types"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    type_name: Mapped[str] = mapped_column(String(8), nullable=False)
+
+
+class Budget(db.Model):
+    __tablename__ = "budgets"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    user_id = mapped_column(ForeignKey("users.id"))
+    user = relationship("User", back_populates="budgets")
+    category_id = mapped_column(ForeignKey("categories.id"))
+    category = relationship("Category", back_populates="budgets")
+    budget_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    limit_amount: Mapped[int] = mapped_column(Integer, nullable=False)
+    spent_amount: Mapped[int] = mapped_column(Integer, nullable=True)
+
