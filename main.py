@@ -1,11 +1,11 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap4
 from flask_wtf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
-from models import User
-from forms import ContactForm, LoginForm, RegisterForm, DeleteForm
+from models import User, Category, Type, Budget
+from forms import ContactForm, LoginForm, RegisterForm, DeleteForm, AddCategory, DeleteCategory, AddBudget, DeleteBudget, BudgetPopup
 from contact import send_mail
 from datetime import date
 from dotenv import load_dotenv
@@ -104,13 +104,53 @@ def show_transactions():
 @app.route("/budgets", methods=["GET", "POST"])
 @login_required
 def show_budgets():
-    return render_template("budgets.html")
+    modal = False
+    add_budget = AddBudget()
+    add_budget_popup = BudgetPopup()
+    delete_budget = DeleteBudget()
+
+    result = db.session.execute(db.select(Budget.budget_name)).all()
+    if not result:
+        flash("You don't have any budgets set 😔")
+
+    if add_budget_popup.validate_on_submit():
+        modal = True
+
+    if add_budget.validate_on_submit():
+        budget_name = add_budget.budget_name.data
+        limit_amount = add_budget.limit_amount.data
+
+        result = db.session.execute(db.select(Budget).where(Budget.budget_name == budget_name)).scalar()
+        if result:
+            flash("There already is a budget with this name!")
+            return redirect(url_for('show_budgets'))
+
+        new_budget = Budget(
+            user=current_user,
+            budget_name=budget_name,
+            limit_amount=limit_amount
+        )
+
+        db.session.add(new_budget)
+        db.session.commit()
+        return redirect(url_for("show_budgets"))
+
+    return render_template("budgets.html", form_add=add_budget, form_del=delete_budget, popup_form=add_budget_popup, modal=modal)
 
 
 @app.route("/categories", methods=["GET", "POST"])
 @login_required
 def show_categories():
-    return render_template("categories.html")
+    # TODO: Add/Delete categories [user's option]
+    # add_category_form = AddCategory()
+    # delete_category = DeleteCategory()
+
+    result = db.session.execute(db.select(Category.category_name)).all()
+    if not result:
+        flash("You don't have any categories 😔")
+
+    # return render_template("categories.html", form_add=add_category_form, categories=result, form_delete=delete_category)
+    return render_template("categories.html", categories=result)
 
 
 @app.route("/settings", methods=["GET", "POST"])
@@ -151,9 +191,8 @@ def contact():
         message = contact_form.message.data
 
         to_email = os.getenv('EMAIL')
-        from_email = os.getenv('EMAIL')  # it's not the best way to do that...
+        from_email = os.getenv('EMAIL')
 
-        #  definitely will have to change that
         send_mail(username, message, from_email, user_email, to_email)
         return render_template("success.html", option="contact")  # contact/login/register
 
