@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% from 'bootstrap4/form.html' import render_form %}
+
+{% block styling %}
+    {{ super() }}
+
+    .flash {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    #category_name, .container {
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 3%;
+    }
+
+    .container {
+        padding-top: 1em;
+    }
+
+    a.nav-link, div>a {
+        display: block;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 1);
+    }
+
+{% endblock %}
+
+{% block nav %}
+        <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url_for('platform_homepage') }}">Dashboard</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
+
+{% block content %}
+    <h1>Hello, {{ current_user.name }}!</h1>
+    <h3>Availabe categories:</h3>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="flash">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        {% if categories %}
+            {% for category in categories %}
+                <div class="row">
+                    <div class="col-sm">
+                        <p>{{ category[0] }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+{% endblock %}
