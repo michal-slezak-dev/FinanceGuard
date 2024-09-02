@@ -109,8 +109,9 @@ def show_budgets():
     add_budget_popup = BudgetPopup()
     delete_budget = DeleteBudget()
 
-    result = db.session.execute(db.select(Budget.budget_name)).all()
-    if not result:
+    # available_budgets = db.session.execute(db.select(Budget.budget_name)).all()
+    available_budgets = Budget.query.filter_by(user_id=current_user.id).all()
+    if not available_budgets:
         flash("You don't have any budgets set 😔")
 
     if add_budget_popup.validate_on_submit():
@@ -118,6 +119,7 @@ def show_budgets():
 
     if add_budget.validate_on_submit():
         budget_name = add_budget.budget_name.data
+        budget_category = db.session.query(Category).filter_by(category_name=add_budget.category_choice.data).first()
         limit_amount = add_budget.limit_amount.data
 
         result = db.session.execute(db.select(Budget).where(Budget.budget_name == budget_name)).scalar()
@@ -127,15 +129,17 @@ def show_budgets():
 
         new_budget = Budget(
             user=current_user,
+            category=budget_category,
             budget_name=budget_name,
-            limit_amount=limit_amount
+            limit_amount=limit_amount,
+            spent_amount=0
         )
 
         db.session.add(new_budget)
         db.session.commit()
         return redirect(url_for("show_budgets"))
 
-    return render_template("budgets.html", form_add=add_budget, form_del=delete_budget, popup_form=add_budget_popup, modal=modal)
+    return render_template("budgets.html", budgets=available_budgets, form_add=add_budget, form_del=delete_budget, popup_form=add_budget_popup, modal=modal)
 
 
 @app.route("/categories", methods=["GET", "POST"])

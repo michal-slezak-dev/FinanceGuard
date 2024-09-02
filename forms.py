@@ -1,6 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, TextAreaField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
+from app import app, db
+from models import Category
+
+with app.app_context():
+    available_categories = db.session.execute(db.select(Category.category_name)).all()
 
 
 def chek_if_non_negative_num(form, field):
@@ -46,9 +51,9 @@ class BudgetPopup(FlaskForm):
 
 
 class AddBudget(FlaskForm):
-    budget_name = StringField("Budget Name", validators=[DataRequired()], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput"})
-    limit_amount = IntegerField("Limit Amount", validators=[DataRequired(), chek_if_non_negative_num], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput"})
-    category_choice = SelectField("Choose Category", choices=[("Test", "test"), ("Test2", "test2")], validators=[DataRequired()])
+    budget_name = StringField("Budget Name", validators=[DataRequired()], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    limit_amount = IntegerField("Limit Amount", validators=[DataRequired(), chek_if_non_negative_num], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    category_choice = SelectField("Choose a Category", choices=[("", "Category")] + [(category_name[0], category_name[0]) for category_name in available_categories], validators=[DataRequired()], render_kw={"novalidate": True})
     add_budget = SubmitField("Add Budget", render_kw={"class": "w-100 mb-2 btn btn-lg rounded-3 btn-primary"})
 
 

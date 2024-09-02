@@ -106,7 +106,7 @@
                       <div class="form-floating mb-3">
                           {{ form_add.budget_name }}
                           <label for="budget_name">Budget Name</label>
-                          {% if form_add.budget_name.errors %}
+                          {% if form_add.budget_name.errors and form_add.is_submitted() %}
                             <div class="text-danger">
                                 {% for error in form_add.budget_name.errors %}
                                     <p>{{ error }}</p>
@@ -116,8 +116,8 @@
                       </div>
                         <div class="form-floating mb-3">
                           {{ form_add.category_choice }}
-                          <label for="category_choice">Category</label>
-                          {% if form_add.category_choice.errors %}
+<!--                          <label for="category_choice">Category</label>-->
+                          {% if form_add.category_choice.errors  and form_add.is_submitted() %}
                             <div class="text-danger">
                                 {% for error in form_add.category_choice.errors %}
                                     <p>{{ error }}</p>
@@ -128,7 +128,7 @@
                       <div class="form-floating mb-3">
                           {{ form_add.limit_amount }}
                           <label for="limit_amount">Limit Amount</label>
-                          {% if form_add.limit_amount.errors %}
+                          {% if form_add.limit_amount.errors  and form_add.is_submitted() %}
                             <div class="text-danger">
                                 {% for error in form_add.limit_amount.errors %}
                                     <p>{{ error }}</p>
@@ -148,10 +148,15 @@
             {% for budget in budgets %}
                 <div class="row">
                     <div class="col-sm">
-                        <p>{{ category[0] }}</p>
+                        <p>{{ budget.budget_name }} {{ budget.limit_amount }} {{ budget.spent_amount }} {{ budget.category.category_name }}</p>
                     </div>
                 </div>
             {% endfor %}
     </div>
     {% endif %}
 {% endblock %}
+
+{%block additional_js %}
+    <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+{% endblock %}
+
