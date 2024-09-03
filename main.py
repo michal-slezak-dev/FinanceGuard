@@ -107,23 +107,23 @@ def show_budgets():
     page = request.args.get("page", 1, type=int)
     per_page = 6
 
-    modal_add, modal_edit = False, False
+    modal_add = False
+    # modal_edit = False
     add_budget = AddBudget()
     add_budget_popup = BudgetPopup()
-    edit_budget = EditBudget()
     edit_budget_popup = EditBudgetPopup()
     delete_budget = DeleteBudget()
 
     available_budgets = Budget.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page, error_out=False)
     # print(available_budgets.items())
-    if not available_budgets:
+    if not available_budgets.items:
         flash("You don't have any budgets set 😔")
 
     if add_budget_popup.validate_on_submit():
         modal_add = True
 
-    if edit_budget_popup.validate_on_submit():
-        modal_edit = True
+    # if edit_budget_popup.validate_on_submit():
+    #     return redirect(url_for("edit_budgets"))
 
     if add_budget.validate_on_submit():
         budget_name = add_budget.budget_name.data
@@ -147,12 +147,15 @@ def show_budgets():
         db.session.commit()
         return redirect(url_for("show_budgets"))
 
-    return render_template("budgets.html", budgets=available_budgets, form_add=add_budget, form_edit=edit_budget, form_del=delete_budget, popup_form_add=add_budget_popup, popup_form_edit=edit_budget_popup, modal_add=modal_add, modal_edit=modal_edit)
+    return render_template("budgets.html", budgets=available_budgets, form_add=add_budget, form_del=delete_budget, popup_form_add=add_budget_popup, popup_form_edit=edit_budget_popup, modal_add=modal_add)
 
 
 @app.route("/edit-budget", methods=["GET", "POST"])
 @login_required
 def edit_budgets():
+    # edit_budget = EditBudget()
+    #
+    # return redirect(url_for("show_budgets", form_edit=edit_budget))
     ...
 
 

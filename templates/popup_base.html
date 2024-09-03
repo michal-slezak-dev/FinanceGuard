@@ -1,0 +1,49 @@
+<div class="modal" style="display: block;">
+    <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">{{ popup_title }}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+          <div class="modal-body p-5 pt-0">
+            <form method="POST" novalidate>
+                  {{ form.csrf_token }}
+                  {{ form.hidden_tag() }}
+              <div class="form-floating mb-3">
+                  {{ form.budget_name }}
+                  <label for="budget_name">Budget Name</label>
+                  {% if form.budget_name.errors and form.is_submitted() %}
+                    <div class="text-danger">
+                        {% for error in form.budget_name.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                  {% endif %}
+              </div>
+                <div class="form-floating mb-3">
+                  {{ form.category_choice }}
+<!--                          <label for="category_choice">Category</label>-->
+                  {% if form.category_choice.errors  and form.is_submitted() %}
+                    <div class="text-danger">
+                        {% for error in form.category_choice.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                  {% endif %}
+              </div>
+              <div class="form-floating mb-3">
+                  {{ form.limit_amount }}
+                  <label for="limit_amount">Limit Amount</label>
+                  {% if form.limit_amount.errors  and form.is_submitted() %}
+                    <div class="text-danger">
+                        {% for error in form.limit_amount.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                  {% endif %}
+              </div>
+                {{ form_action }}
+            </form>
+          </div>
+    </div>
+</div>
