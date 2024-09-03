@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
 from models import User, Category, Type, Budget
-from forms import ContactForm, LoginForm, RegisterForm, DeleteForm, AddCategory, DeleteCategory, AddBudget, DeleteBudget, BudgetPopup
+from forms import ContactForm, LoginForm, RegisterForm, DeleteForm, AddCategory, DeleteCategory, AddBudget, EditBudget, EditBudgetPopup, DeleteBudget, BudgetPopup
 from contact import send_mail
 from datetime import date
 from dotenv import load_dotenv
@@ -104,18 +104,26 @@ def show_transactions():
 @app.route("/budgets", methods=["GET", "POST"])
 @login_required
 def show_budgets():
-    modal = False
+    page = request.args.get("page", 1, type=int)
+    per_page = 6
+
+    modal_add, modal_edit = False, False
     add_budget = AddBudget()
     add_budget_popup = BudgetPopup()
+    edit_budget = EditBudget()
+    edit_budget_popup = EditBudgetPopup()
     delete_budget = DeleteBudget()
 
-    # available_budgets = db.session.execute(db.select(Budget.budget_name)).all()
-    available_budgets = Budget.query.filter_by(user_id=current_user.id).all()
+    available_budgets = Budget.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page, error_out=False)
+    # print(available_budgets.items())
     if not available_budgets:
         flash("You don't have any budgets set 😔")
 
     if add_budget_popup.validate_on_submit():
-        modal = True
+        modal_add = True
+
+    if edit_budget_popup.validate_on_submit():
+        modal_edit = True
 
     if add_budget.validate_on_submit():
         budget_name = add_budget.budget_name.data
@@ -139,7 +147,24 @@ def show_budgets():
         db.session.commit()
         return redirect(url_for("show_budgets"))
 
-    return render_template("budgets.html", budgets=available_budgets, form_add=add_budget, form_del=delete_budget, popup_form=add_budget_popup, modal=modal)
+    return render_template("budgets.html", budgets=available_budgets, form_add=add_budget, form_edit=edit_budget, form_del=delete_budget, popup_form_add=add_budget_popup, popup_form_edit=edit_budget_popup, modal_add=modal_add, modal_edit=modal_edit)
+
+
+@app.route("/edit-budget", methods=["GET", "POST"])
+@login_required
+def edit_budgets():
+    ...
+
+
+@app.route("/delete-budget/<int:budget_id>", methods=["GET", "POST"])
+@login_required
+def delete_budget(budget_id):
+    budget = db.get_or_404(Budget, budget_id)
+
+    db.session.delete(budget)
+    db.session.commit()
+
+    return redirect(url_for("show_budgets"))
 
 
 @app.route("/categories", methods=["GET", "POST"])

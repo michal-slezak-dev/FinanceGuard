@@ -67,6 +67,12 @@
         box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
     }
 
+    .pagination-control {
+        display: flex;
+        justify-content: center;
+    }
+
+
 {% endblock %}
 
 {% block nav %}
@@ -78,9 +84,9 @@
     <h1>Hello, {{ current_user.name }}!</h1>
     <h3>Here are your budgets</h3>
     <form method="POST" action="{{ url_for('show_budgets') }}">
-        {{ popup_form.csrf_token }}
-        {{ popup_form.hidden_tag() }}
-        {{ popup_form.add_budget }}
+        {{ popup_form_add.csrf_token }}
+        {{ popup_form_add.hidden_tag() }}
+        {{ popup_form_add.add_budget }}
     </form>
 
     {% with messages = get_flashed_messages() %}
@@ -91,7 +97,7 @@
         {% endif %}
     {% endwith %}
 
-    {% if modal %}
+    {% if modal_add %}
         <div class="modal" style="display: block;">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-header p-5 pb-4 border-bottom-0">
@@ -143,15 +149,122 @@
         </div>
     {% endif %}
 
-    {% if budgets %}
-    <div class="container">
-            {% for budget in budgets %}
-                <div class="row">
-                    <div class="col-sm">
-                        <p>{{ budget.budget_name }} {{ budget.limit_amount }} {{ budget.spent_amount }} {{ budget.category.category_name }}</p>
-                    </div>
+    {% if modal_edit %}
+        <div class="modal" style="display: block;">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2">Edit Budget</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            {% endfor %}
+
+                  <div class="modal-body p-5 pt-0">
+                    <form method="POST" novalidate>
+                          {{ form_edit.csrf_token }}
+                          {{ form_edit.hidden_tag() }}
+                      <div class="form-floating mb-3">
+                          {{ form_edit.budget_name }}
+                          <label for="budget_name">Budget Name</label>
+                          {% if form_edit.budget_name.errors and form_edit.is_submitted() %}
+                            <div class="text-danger">
+                                {% for error in form_edit.budget_name.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                          {% endif %}
+                      </div>
+                        <div class="form-floating mb-3">
+                          {{ form_edit.category_choice }}
+<!--                          <label for="category_choice">Category</label>-->
+                          {% if form_edit.category_choice.errors  and form_edit.is_submitted() %}
+                            <div class="text-danger">
+                                {% for error in form_edit.category_choice.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                          {% endif %}
+                      </div>
+                      <div class="form-floating mb-3">
+                          {{ form_edit.limit_amount }}
+                          <label for="limit_amount">Limit Amount</label>
+                          {% if form_edit.limit_amount.errors  and form_edit.is_submitted() %}
+                            <div class="text-danger">
+                                {% for error in form_edit.limit_amount.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                          {% endif %}
+                      </div>
+                      {{ form_edit.save_changes }}
+                    </form>
+                  </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if budgets.items %}
+    <div class="container">
+         <div class="row">
+                {% for budget in budgets.items %}
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                {{ form_del.csrf_token }}
+                                {{ form_del.hidden_tag() }}
+                                {{ form_edit.csrf_token }}
+                                {{ form_edit.hidden_tag() }}
+                                <h5 class="card-title">{{ budget.budget_name }}</h5>
+                                <p class="card-text">Limit: {{ budget.limit_amount }}</p>
+                                <p class="card-text">Spent: {{ budget.spent_amount }}</p>
+                                <p><span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{ budget.category.category_name }}</span></p>
+                                <form action="{{ url_for('delete_budget', budget_id=budget.id) }}">
+                                    {{ form_del.delete_budget }}
+                                </form>
+                                {{ popup_form_edit.edit_budget }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="pagination-control">
+                <nav aria-label="Page navigation" class="page-nav">
+                    <ul class="pagination">
+                        {% if budgets.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('show_budgets', page=budgets.prev_num) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Previous">&laquo;</span>
+                            </li>
+                        {% endif %}
+
+                        {% for page_num in budgets.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=1) %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == budgets.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('show_budgets', page=page_num) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if budgets.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('show_budgets', page=budgets.next_num) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Next">&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
     </div>
     {% endif %}
 {% endblock %}

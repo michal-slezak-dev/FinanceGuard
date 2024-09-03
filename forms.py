@@ -57,6 +57,17 @@ class AddBudget(FlaskForm):
     add_budget = SubmitField("Add Budget", render_kw={"class": "w-100 mb-2 btn btn-lg rounded-3 btn-primary"})
 
 
+class EditBudgetPopup(FlaskForm):
+    edit_budget = SubmitField("Edit", render_kw={"class": "btn btn-primary"})
+
+
+class EditBudget(FlaskForm):
+    budget_name = StringField("Budget Name", validators=[DataRequired()], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    limit_amount = IntegerField("Limit Amount", validators=[DataRequired(), chek_if_non_negative_num], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    category_choice = SelectField("Choose a Category", choices=[("", "Category")] + [(category_name[0], category_name[0]) for category_name in available_categories], validators=[DataRequired()], render_kw={"novalidate": True})
+    save_changes = SubmitField("Save Changes", render_kw={"class": "w-100 mb-2 btn btn-lg rounded-3 btn-primary"})
+
+
 class DeleteBudget(FlaskForm):
     delete_budget = SubmitField("Delete", render_kw={"class": "btn btn-danger"})
 
