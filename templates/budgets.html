@@ -103,7 +103,7 @@
     {% endwith %}
 
     {% if modal_add %}
-        {% with popup_title="Add Budget", form=form_add, form_action=form_add.add_budget %}
+        {% with popup_title="Add Budget", form=form_add, form_action=form_add.add_budget, action=url_for("show_budgets") %}
             {% include 'popup_base.html' %}
         {% endwith %}
     {% endif %}
@@ -126,7 +126,7 @@
 
                                         {{ form_del.delete_budget }}
                                     </form>
-                                    <form action="{{ url_for('edit_budgets') }}" method="POST">
+                                    <form action="{{ url_for('edit_budgets', budget_id=budget.id) }}" method="POST">
                                         {{ popup_form_edit.csrf_token }}
                                         {{ popup_form_edit.hidden_tag() }}
 

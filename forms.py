@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, PasswordField, SelectField, SubmitField
+from wtforms import StringField, IntegerField, TextAreaField, DateField, BooleanField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 from app import app, db
 from models import Category
@@ -69,5 +69,29 @@ class EditBudget(FlaskForm):
 
 
 class DeleteBudget(FlaskForm):
+    delete_budget = SubmitField("Delete", render_kw={"class": "btn btn-danger"})
+
+
+class TransactionPopup(FlaskForm):
+    add_budget = SubmitField("Add Transaction", render_kw={"class": "mb-2 btn btn-lg rounded-3 btn-primary"})
+
+
+class AddTransaction(FlaskForm):
+    transaction_name = StringField("Transaction Name", validators=[DataRequired()], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    transaction_date = DateField("Date", validators=[DataRequired(), ], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    is_recurring = BooleanField("Is it recurring?", render_kw={"for": "flexCheckDefault", "class": "form-check-input rounded-3", "id": "flexCheckDefault", "novalidate": True})
+    recurrence_pattern = StringField("How often is it renewed?", render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True, "value": "W - weekly, M - monthly, Y - yearly, D - daily"})
+    recurrence_start = DateField("Start Date", render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True, "value": "000-00-00"})
+    add_transaction = SubmitField("Add Transaction", render_kw={"class": "w-100 mb-2 btn btn-lg rounded-3 btn-primary"})
+
+
+class EditTransaction(FlaskForm):
+    budget_name = StringField("Budget Name", validators=[DataRequired()], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    limit_amount = IntegerField("Limit Amount", validators=[DataRequired(), chek_if_non_negative_num], render_kw={"for": "floatingInput", "class": "form-control rounded-3", "id": "floatingInput", "novalidate": True})
+    category_choice = SelectField("Choose a Category", choices=[("", "Category")] + [(category_name[0], category_name[0]) for category_name in available_categories], validators=[DataRequired()], render_kw={"novalidate": True})
+    save_changes = SubmitField("Save Changes", render_kw={"class": "w-100 mb-2 btn btn-lg rounded-3 btn-primary"})
+
+
+class DeleteTransaction(FlaskForm):
     delete_budget = SubmitField("Delete", render_kw={"class": "btn btn-danger"})
 

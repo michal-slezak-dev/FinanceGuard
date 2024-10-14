@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% from 'bootstrap4/form.html' import render_form %}
+
+{% block styling %}
+    {{ super() }}
+
+    .flash {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    #budget_name, #limit_amount, .container {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .container {
+        padding-top: 1em;
+        border-radius: 3%;
+    }
+
+    a.nav-link, div>a {
+        display: block;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 1);
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        overflow: auto;
+    }
+
+    .modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 2em;
+        border-radius: 1em;
+        box-shadow: 0.5em 0.75em rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 500px;
+    }
+
+    #category_choice {
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 0.25rem;
+        padding: 0.75rem 1rem;
+        height: calc(3.5rem + 2px);
+        width: 100%;
+    }
+
+    #category_choice:focus {
+        color: white;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .pagination-control {
+        display: flex;
+        justify-content: center;
+    }
+
+    .form-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+{% endblock %}
+
+{% block nav %}
+        <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url_for('platform_homepage') }}">Dashboard</a>
+        <a class="nav-link fw-bold py-1 px-0" href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
+
+{% block content %}
+    <h1>Hello, {{ current_user.name }}!</h1>
+    <h3>Here are your transactions</h3>
+    <form method="POST" action="{{ url_for('show_transactions') }}">
+        {{ popup_form_add.csrf_token }}
+        {{ popup_form_add.hidden_tag() }}
+        {{ popup_form_add.add_budget }}
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="flash">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if modal_add %}
+        {% with popup_title="Add Transaction", form=form_add, form_action=form_add.add_transaction, action=url_for("show_transactions") %}
+            {% include 'popup_base_transaction.html' %}
+        {% endwith %}
+    {% endif %}
+
+    {% if transactions.items %}
+    <div class="container">
+         <div class="row">
+                {% for transaction in transactions.items %}
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ transaction.name }}</h5>
+                                <p class="card-text">Date: {{ transaction.transaction_date }}</p>
+                                <p class="card-text">Spent: {{ budget.spent_amount }}</p>
+                                <p><span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{ budget.category.category_name }}</span></p>
+                                <div class="form-container">
+                                    <form action="{{ url_for('delete_budget', budget_id=budget.id) }}" method="POST">
+                                        {{ form_del.csrf_token }}
+                                        {{ form_del.hidden_tag() }}
+
+                                        {{ form_del.delete_budget }}
+                                    </form>
+                                    <form action="{{ url_for('edit_budgets', budget_id=budget.id) }}" method="POST">
+                                        {{ popup_form_edit.csrf_token }}
+                                        {{ popup_form_edit.hidden_tag() }}
+
+                                        {{ popup_form_edit.edit_budget }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="pagination-control">
+                <nav aria-label="Page navigation" class="page-nav">
+                    <ul class="pagination">
+                        {% if budgets.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('show_budgets', page=budgets.prev_num) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Previous">&laquo;</span>
+                            </li>
+                        {% endif %}
+
+                        {% for page_num in budgets.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=1) %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == budgets.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('show_budgets', page=page_num) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if budgets.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('show_budgets', page=budgets.next_num) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Next">&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block additional_js %}
+    <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+{% endblock %}
+

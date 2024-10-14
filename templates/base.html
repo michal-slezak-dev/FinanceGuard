@@ -19,7 +19,7 @@
 
     <style>
         body {
-        background-image: url("./static/img/background_image.jpg");
+        background-image: url({{ url_for('static', filename='img/background_image.jpg') }});
         background-repeat: no-repeat;
         background-size: cover;
         background-color: rgba(0, 0, 51, 0.5);
