@@ -5,7 +5,6 @@ FinanceGuard is a robust and intuitive personal finance tracker designed to help
 
 ## Key Features [More details to be added soon :-)]
 ![Personal Finance Tracker features - plan (1)](https://github.com/user-attachments/assets/ab218078-7ed2-440f-a4fb-e5f15207b959)
-![Personal Finance Tracker Database structure (6)](https://github.com/user-attachments/assets/005239ed-ffe0-4709-b0c6-6942edf8d8b7)
 
 
 
